@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import os
@@ -20,9 +19,12 @@ color_name = st.selectbox("اختر لونك المفضل", df["name"])
 selected_row = df[df["name"] == color_name].iloc[0]
 st.markdown(f"### اللون المختار: {selected_row['name']} ({selected_row['code']})")
 
+# ✅ تصحيح امتداد الصورة: نحول الاسم إلى حروف صغيرة
+filename = selected_row["filename"].lower()
+image_path = os.path.join("colors", filename)
+
 # عرض صورة اللون
-image_path = os.path.join("colors", selected_row["filename"])
-st.image(image_path, width=300, caption=selected_row["filename"])
+st.image(image_path, width=300, caption=filename)
 
 # إدخال مساحة التصميم
 area = st.number_input("أدخل مساحة الجدار (بالمتر المربع):", min_value=1, step=1)
@@ -33,6 +35,8 @@ st.markdown(f"💰 **التكلفة التقديرية:** {estimated_price:,.0f}
 
 # عرض لون متناسق بشكل تجريبي (عشوائي من نفس المجموعة)
 similar_colors = df[df["name"] != selected_row["name"]].sample(1)
+similar_filename = similar_colors.iloc[0]["filename"].lower()
+
 st.markdown("### 🎯 لون ثانٍ متناسق مقترح:")
-st.image(os.path.join("colors", similar_colors.iloc[0]["filename"]), width=200,
+st.image(os.path.join("colors", similar_filename), width=200,
          caption=f"{similar_colors.iloc[0]['name']} ({similar_colors.iloc[0]['code']})")
